@@ -4,16 +4,20 @@ import java.io.StringReader;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
 import org.gandhi.db.reader.enums.DBReaderConfigProperty;
 import org.gandhi.db.reader.enums.DataBaseType;
 import org.gandhi.db.reader.exception.DBReaderException;
 import org.gandhi.db.reader.exception.DBReaderExceptionCode;
+import org.gandhi.db.reader.result.Result;
+import org.gandhi.db.reader.result.Row;
 import org.gandhi.db.reader.util.DBReaderPropertyUtil;
 
 public class QueryProcessor {
@@ -33,8 +37,8 @@ public class QueryProcessor {
 		return instance;
 	}
 
-	public ResultSet process(String sqlQuery) throws DBReaderException {
-		ResultSet resultSet = null;
+	public Result process(String sqlQuery) throws DBReaderException {
+		Result result = null;
 		String databaseType = DBReaderPropertyUtil.getProperty(DBReaderConfigProperty.DB_TYPE.key());
 		String dbHost = DBReaderPropertyUtil.getProperty(DBReaderConfigProperty.DB_HOST.key());
 		String dbName = DBReaderPropertyUtil.getProperty(DBReaderConfigProperty.DB_NAME.key());
@@ -51,14 +55,32 @@ public class QueryProcessor {
 		String dbUrl = prepareDBUrl(databaseType, dbHost, dbName);
 		Connection connection = null;
 		Statement statement = null;
+		ResultSet resultSet = null;
+		ResultSetMetaData resultSetMetaData = null;
 		try {
 			connection = DriverManager.getConnection(dbUrl, userName, userPassword);
 			statement = connection.createStatement();
 			resultSet = statement.executeQuery(sqlQuery);
+			resultSetMetaData = resultSet.getMetaData();
+			int numberOfColumns = resultSetMetaData.getColumnCount();
+			
+			result = new Result();
+			List<Row> rows = result.getRows();
+			while(resultSet.next()){
+				Row row = new Row();
+				List<Object> columns = row.getColumns();
+				for(int i=1;i<=numberOfColumns;i++){
+					columns.add(resultSet.getObject(i));
+				}
+				rows.add(row);
+			}
 		} catch (SQLException sqle) {
 			throw new DBReaderException(DBReaderExceptionCode.SERVER_SQL_EXCEPTION_OCCURED.code(), "An SQL Exception occured while processing the given query with the provided configurations - "+sqle.getMessage(), sqle);
 		} finally{
 			try{
+				if(resultSet != null && !resultSet.isClosed()){
+					resultSet.close();
+				}
 				if(statement != null && !statement.isClosed()){
 					statement.close();
 				}
@@ -69,7 +91,7 @@ public class QueryProcessor {
 				throw new DBReaderException(DBReaderExceptionCode.SERVER_SQL_EXCEPTION_OCCURED.code(), "An SQL Exception occured while releasing the JDBC resources - "+sqle.getMessage(), sqle);
 			}
 		}
-		return resultSet;
+		return result;
 	}
 	
 	//validates Query as per our restrictions of avoiding DML(Data Modification Language) & certain tables in DQL(Data Query Language).
