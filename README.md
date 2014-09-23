@@ -6,12 +6,12 @@ All the write operations like INSERT/UPDATE or DELETE operations are filtered an
 
 It also takes a list of tables called  asrestricted tables, on which all operation including read/write are filtered and thrown back as exceptions by the library.
 
-Currently only 'mysql' is supported.
+Currently only 'mysql' & 'postgresql' is supported.
 
 I am using JSQLParser(http://jsqlparser.sourceforge.net/) to syntactically validate the provided SQL query & perform the above semantic restrictions as well.
 
 All the library user is supposed to provide the path of the config file as a system property($org.gandhi.db.reader.config.file.path).
 
-You can find a sampleTest file and a sample config file at 
+You can find a sampleTest file and a sample config files at 
     https://github.com/srigandhi98/db-reader/blob/master/src/test/java/org/gandhi/db/reader/test/DBReaderTest.java & 
-    https://github.com/srigandhi98/db-reader/blob/master/src/test/resources/db-reader.cfg.properties
+    https://github.com/srigandhi98/db-reader/blob/master/src/test/resources/db-reader-mysql.cfg.properties & https://github.com/srigandhi98/db-reader/blob/master/src/test/resources/db-reader-postgresql.cfg.properties

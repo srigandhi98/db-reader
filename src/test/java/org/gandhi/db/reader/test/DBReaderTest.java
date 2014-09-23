@@ -17,7 +17,10 @@ public class DBReaderTest {
 		String sqlQuery4 = "Update Table2 set col=2;";
 		String sqlQuery5 = "Select * from Table3";
 		
-		System.setProperty("org.gandhi.db.reader.config.file.path", "db-reader.cfg.properties");
+		//System.setProperty("org.gandhi.db.reader.config.file.path", "db-reader-mysql.cfg.properties");
+		System.setProperty("org.gandhi.db.reader.config.file.path", "db-reader-postgresql.cfg.properties");
+
+		
 		Result result = QueryProcessor.getInstance().process(sqlQuery1);
 		List<Row> rows = result.getRows();
 		for(Row r : rows){

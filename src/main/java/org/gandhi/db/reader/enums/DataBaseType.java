@@ -1,7 +1,8 @@
 package org.gandhi.db.reader.enums;
 
 public enum DataBaseType {
-	MY_SQL("mysql", "com.mysql.jdbc.Driver", "jdbc:mysql:");
+	MY_SQL("mysql", "com.mysql.jdbc.Driver", "jdbc:mysql:"),
+	POSTGRE_SQL("postgresql","org.postgresql.Driver","jdbc:postgresql:");
 	
 	private String code;
 	

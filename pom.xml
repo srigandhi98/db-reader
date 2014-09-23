@@ -16,6 +16,11 @@
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
+			<groupId>postgresql</groupId>
+			<artifactId>postgresql</artifactId>
+			<version>9.1-901-1.jdbc4</version>
+		</dependency>
+		<dependency>
 			<groupId>net.sf.jsqlparser</groupId>
 			<artifactId>jsqlparser</artifactId>
 			<version>0.8.0</version>

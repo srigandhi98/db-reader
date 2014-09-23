@@ -22,7 +22,7 @@ public class DBReaderPropertyUtil {
 				if(is != null){
 					properties.load(is);
 				} else{
-					throw new DBReaderException(DBReaderExceptionCode.CALLER_CONFIGURATION_PROPERTY_FILE_SPECIFICATION_EXCEPTION.code(), "configFile : "+configFilePath+" could not be provided");
+					throw new DBReaderException(DBReaderExceptionCode.CALLER_CONFIGURATION_PROPERTY_FILE_SPECIFICATION_EXCEPTION.code(), "configFile : "+configFilePath+" could not be found");
 				}
 			} catch (IOException e) {
 				throw new DBReaderException(DBReaderExceptionCode.CALLER_CONFIGURATION_PROPERTY_FILE_SPECIFICATION_EXCEPTION.code(), "IOException occured while trying to read/parse the configuration property file : "+configFilePath+" provided", e);
